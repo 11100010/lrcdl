@@ -9,11 +9,15 @@ DEFAULT_HEADERS = {
 
 def get_lyrics(track_name, artist_name, album_name, duration):
     params = {
-        "track_name": track_name.strip(),
-        "artist_name": artist_name.strip(),
-        "album_name": album_name.strip(),
+        "track_name": track_name.strip() if track_name else None,
+        "artist_name": artist_name.strip() if artist_name else None,
+        "album_name": album_name.strip() if album_name else None,
         "duration": duration
     }
+    
+    # Remove None values from params
+    params = {k: v for k, v in params.items() if v is not None}
+
     r = requests.get(f"{DEFAULT_HOST}/api/get", params=params, headers=DEFAULT_HEADERS)
 
     if r.ok:

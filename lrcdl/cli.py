@@ -80,7 +80,8 @@ def lrcdl(path, title, album, artist, cache, recursive, include_plain, download_
         except LyricsAlreadyExists:
             click.echo(f"Lyrics already exist for {click.style(track_path, bold=True)}. Skipping")
         except NotEnoughMetadata as e:
-            click.echo(f"Not enough metadata for {click.style(track_path, bold=True)}. Missing: ({', '.join(e.args[0])}). Specify them manually using --title, --album, and --artist")
+            missing_fields = e.args[0]
+            click.echo(f"Not enough metadata for {click.style(track_path, bold=True)}. Missing: {', '.join(missing_fields)}. Specify them manually using --title, --artist, and --album.") 
         except (LyricsNotAvailable, TrackNotFound):
             skip.append(track_path)
             click.echo(f"Could not find suitable lyrics for {click.style(track_path, bold=True)}")
