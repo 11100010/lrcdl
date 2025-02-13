@@ -1,3 +1,4 @@
+import os
 from mutagen.flac import FLAC
 from mutagen.mp3 import MP3
 from mutagen.mp4 import MP4
@@ -20,12 +21,18 @@ metadata_mapping = {
     }
 }
 
-def get_metadata(file):
-    metadata = {}
-    
-    for mapping in metadata_mapping:
-        if isinstance(file, mapping):
-            for item, val in metadata_mapping[mapping].items():
-                metadata[item] = dict(file)[val][0] if val in file else None
 
-    return metadata
+def extract_metadata_from_filename(filename):
+    """
+    Extract artist and title from a filename in the format "Artist - Title.ext".
+    The title ends prematurely by the first occurrence of "(".
+    """
+    name, _ = os.path.splitext(filename)
+    parts = name.split(" - ")
+
+    if len(parts) == 2:
+        artist = parts[0]
+        title = parts[1].split("(")[0].strip()  # Cut off the title at the first "("
+        return {"artist": artist, "title": title}
+
+    return {}
